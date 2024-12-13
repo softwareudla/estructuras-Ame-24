@@ -4,6 +4,7 @@
 #include <string.h>
 #include "funciones.h"
 
+
 Libro biblioteca[Max_Libros];
 int cont_li = 0;
 
