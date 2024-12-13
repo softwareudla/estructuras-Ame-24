@@ -10,38 +10,75 @@ int cont_li = 0;
 
 void registrarLibro() {
     if (cont_li >= Max_Libros) {
-        printf("\nLa biblioteca esta llena. No se pueden agregar mas libros.\n");
+        printf("\nLa biblioteca está llena. No se pueden agregar mas libros.\n");
         return;
     }
 
     Libro nuevoLibro;
-    printf("\nIngrese el ID del libro: ");
-    scanf("%d", &nuevoLibro.id);
+    int id_valido = 0;
 
-    // Verificar que el ID sea unico.
-    for (int i = 0; i < cont_li; i++) {
-        if (biblioteca[i].id == nuevoLibro.id) {
-            printf("El ID ya existe. Intente con un ID diferente.\n");
-            return;
+    // Validar que el ID sea único, un número entero, y no sea negativo.
+    while (!id_valido) {
+        printf("\nIngrese el ID del libro: ");
+        if (scanf("%d", &nuevoLibro.id) != 1) {
+            printf("Entrada invalida. Por favor, ingrese un núumero entero.\n");
+            while (getchar() != '\n'); 
+            continue;
+        }
+
+        if (nuevoLibro.id < 0) {
+            printf("El ID no puede ser negativo. Intente nuevamente.\n");
+            continue;
+        }
+
+        // Verificar si el ID ya existe.
+        int id_repetido = 0;
+        for (int i = 0; i < cont_li; i++) {
+            if (biblioteca[i].id == nuevoLibro.id) {
+                printf("El ID ya existe. Intente con un ID diferente.\n");
+                id_repetido = 1;
+                break;
+            }
+        }
+
+        if (!id_repetido) {
+            id_valido = 1; 
         }
     }
-    getchar(); 
-    printf("Cual es el titulo del libro: ");
-    fgets(nuevoLibro.titulo, sizeof(nuevoLibro.titulo), stdin);
-    nuevoLibro.titulo[strcspn(nuevoLibro.titulo, "\n")] = 0; // Quitar el salto de linea.
 
-    printf("Cual es el autor del libro: ");
+    getchar(); 
+    printf("Ingrese el titulo del libro: ");
+    fgets(nuevoLibro.titulo, sizeof(nuevoLibro.titulo), stdin);
+    nuevoLibro.titulo[strcspn(nuevoLibro.titulo, "\n")] = 0; // Quitar el salto de línea.
+
+    printf("Ingrese el autor del libro: ");
     fgets(nuevoLibro.autor, sizeof(nuevoLibro.autor), stdin);
     nuevoLibro.autor[strcspn(nuevoLibro.autor, "\n")] = 0;
 
-    printf("Ingrese el anio de publicacion del libro: ");
-    scanf("%d", &nuevoLibro.anio_publicacion);
+    // Validar que el año de publicación sea positivo.
+    int anio_valido = 0;
+    while (!anio_valido) {
+        printf("Ingrese la fecha de publicacion: ");
+        if (scanf("%d", &nuevoLibro.anio_publicacion) != 1) {
+            printf("Entrada invalida. Por favor, ingrese un numero entero.\n");
+            while (getchar() != '\n'); 
+            continue;
+        }
+
+        if (nuevoLibro.anio_publicacion < 0) {
+            printf("La fecha no puede ser negativo. Intente nuevamente.\n");
+            continue;
+        }
+
+        anio_valido = 1; 
+    }
 
     strcpy(nuevoLibro.estado, "Disponible");
 
     biblioteca[cont_li++] = nuevoLibro;
     printf("Libro registrado con exito.\n");
 }
+
 
 void mostrarLibros() {
     if (cont_li == 0) {
